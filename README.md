@@ -115,7 +115,6 @@ Acceptable flags:
 - container_id - Provide CCM container ID to run on a single container
 - recording_id - Provide CCM recording ID to run on a single recording
 - dataset - Dataset to evaluate: train, test or all (if not processing a single recording)
-- estimated_container_shape - Use estimate of container shape from the perception pipeline as input to the robot control
 - estimated_filling_mass - Use estimate of filling mass from the perception pipeline as input to the robot control
 - safe_grasp - Enable safe grasping by the robot
 
