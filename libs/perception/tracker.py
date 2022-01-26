@@ -173,8 +173,8 @@ class Tracker:
                 if not os.path.exists(self.savedir+'/volume_estimation'):
                     os.makedirs(self.savedir+'/volume_estimation')
             if self.args.export_pointcloud:
-                if not os.path.exists(self.savedir+'/volume_estimation/'+self.fname1[:-3]+'_pc'):
-                    os.makedirs(self.savedir+'/volume_estimation/'+self.fname1[:-3]+'_pc')
+                if not os.path.exists(self.savedir+'/volume_estimation/'+self.fname1+'_pc'):
+                    os.makedirs(self.savedir+'/volume_estimation/'+self.fname1+'_pc')
 
 
     # Load object detection model
@@ -436,7 +436,7 @@ class Tracker:
                 if self.args.export_pointcloud:
                     if self.args.pointcloud_frame == [] or (self.fr in self.args.pointcloud_frame):
                         print('Saving pointcloud at frame '+str(self.fr))
-                        self.pointcloud_path = self.savedir+'/volume_estimation/'+self.fname1[:-3]+'_pc/'+self.fname1+'_pc_f'+str(self.fr)+'.csv'
+                        self.pointcloud_path = self.savedir+'/volume_estimation/'+self.fname1+'_pc/'+self.fname1+'_pc_f'+str(self.fr)+'.csv'
                         self.container.exportShapePointCloud(self.pointcloud_path)
 
                 self.saveInitialLocation(self.container.centroid)
@@ -487,7 +487,7 @@ class Tracker:
                 if self.args.export_pointcloud:
                     if self.args.pointcloud_frame == [] or (self.fr in self.args.pointcloud_frame):
                         print('Saving pointcloud at frame '+str(self.fr))
-                        self.pointcloud_path = self.savedir+'/volume_estimation/'+self.fname1[:-3]+'_pc/'+self.fname1+'_pc_f'+str(self.fr)+'.csv'
+                        self.pointcloud_path = self.savedir+'/volume_estimation/'+self.fname1+'_pc/'+self.fname1+'_pc_f'+str(self.fr)+'.csv'
                         self.container.exportShapePointCloud(self.pointcloud_path)
 
 
@@ -547,7 +547,7 @@ class Tracker:
             if self.args.export_pointcloud:
                 if self.args.pointcloud_frame == [] or (self.fr in self.args.pointcloud_frame):
                     print('Saving pointcloud at frame '+str(self.fr))
-                    self.pointcloud_path = self.savedir+'/volume_estimation/'+self.fname1[:-3]+'_pc/'+self.fname1+'_pc_f'+str(self.fr)+'.csv'
+                    self.pointcloud_path = self.savedir+'/volume_estimation/'+self.fname1+'_pc/'+self.fname1+'_pc_f'+str(self.fr)+'.csv'
                     self.container.exportShapePointCloud(self.pointcloud_path)
 
             return 1
@@ -565,13 +565,13 @@ class Tracker:
 
     def runRecorded(self):
         # log results
-        self.results_file = open(self.savedir+'/volume_estimation/'+self.fname1[:-3]+'_properties.txt', 'w')
+        self.results_file = open(self.savedir+'/volume_estimation/'+self.fname1+'_properties.txt', 'w')
         self.results_file.write('# Frame | x [m] | y [m] | z [m] | Width bottom [mm] | Width middle [mm] | Width top [mm] | Max width [mm] | Height [mm] | Volume [mL] | Filling level | Filling type | Filling Mass | Weight\n')
         
-        self.fout_res_lev = open(self.savedir+'/volume_estimation/'+self.fname1[:-3] + '_fillinglevel.txt', 'w')
+        self.fout_res_lev = open(self.savedir+'/volume_estimation/'+self.fname1 + '_fillinglevel.txt', 'w')
         self.fout_res_lev.write('# Frame | Bbox1 [x1, y1, x2, y2] | Filling Level c1 | | Filling type c1 | Bbox2 [x1, y1, x2, y2] | Filling Level c2 | Filling type c2\n')
         
-        self.results_file_width = open(self.savedir+'/volume_estimation/'+self.fname1[:-3]+'_width.txt', 'w')
+        self.results_file_width = open(self.savedir+'/volume_estimation/'+self.fname1+'_width.txt', 'w')
         self.results_file_width.write('# Frame | z [m] | Radius [m]\n')
 
 

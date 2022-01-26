@@ -27,6 +27,7 @@ import argparse
 
 import pandas as pd
 import csv
+import json
 
 
 # Numeric libs
@@ -40,73 +41,83 @@ from libs.perception.tracker import *
 #
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-fnames_filling =  ['fi0_fu0','fi1_fu1', 'fi1_fu2','fi2_fu1', 'fi2_fu2', 'fi3_fu1', 'fi3_fu2']
 
-def populate_filenames(mode):
-    list_filenames = []
-    for s in range(0,2):
-        str_s = 's{:d}_'.format(s)
-        
-        for b in range(0,2):
-            str_b = '_b{:d}_'.format(b)
-            
-            for l in range(0,2):
-                str_l = 'l{:d}'.format(l)
+def LoadAnnotations(file_path):
+    with open(file_path) as annotation_file:
+        data = json.load(annotation_file)
+        annotations = data['annotations']
+        annotations_dict = {}
+        for a in annotations:
+            annotations_dict[a['id']] = a
 
-                if mode == 0:
-                    for f in fnames_filling:
-                        list_filenames.append(str_s + f + str_b + str_l)
-                else:
-                    for f in fnames_filling2:
-                        list_filenames.append(str_s + f + str_b + str_l)
+    return annotations_dict
 
-    return list_filenames
 
 #### TRAINING DATA ###
-
 def TrainingDataParser(args):
-    for objid in range(1,7):
-        # containerpath = args.datapath + '/{:d}'.format(objid)
+    annotations_dict = LoadAnnotations('data/annotations/ccm_train_annotation.json')
 
-        args.res_path = args.datapath + '/vision_estimations/container' + '/{:d}'.format(objid)
+    for i in range(684):
+        scenario = annotations_dict[i]['scenario']
         
-        if objid < 7:
-            list_files = populate_filenames(0)
-        else:
-            list_files = populate_filenames(1)
+        # Skip scenario 3 configurations
+        if scenario == 2:
+            continue
 
-        for f in list_files:
-            args.video_1 = args.datapath + '/videos/' + str(objid) + '/rgb/'+ f + '_c1.mp4'
-            args.video_2 = args.datapath + '/videos/' + str(objid) + '/rgb/'+ f + '_c2.mp4'
-            args.calib_1 = args.datapath + '/calibration/' + str(objid) + '/extra/'+ f + '_c1_calib.pickle'
-            args.calib_2 = args.datapath + '/calibration/' + str(objid) + '/extra/'+ f + '_c2_calib.pickle'
-            
-            track = Tracker(args)
-            track.run()
+        arg.res_path = args.datapath + '/vision_estimations/train/'
+
+        args.video_1 = args.datapath + '/train/view1/rgb/{:06d}.mp4'.format(i)
+        args.video_2 = args.datapath + '/train/view2/rgb/{:06d}.mp4'.format(i)
+        args.calib_1 = args.datapath + '/train/view1/calib/{:06d}.pickle'.format(i)
+        args.calib_2 = args.datapath + '/train/view2/calib/{:06d}.pickle'.format(i)
+
+        track = Tracker(args)
+        track.run()
 
 
 #### PUBLIC TESTING SET ###
 def PublicTestingDataParser(args):
-    for objid in range(10,12):
-        # containerpath = args.datapath + '/{:d}'.format(objid)
+    annotations_dict = LoadAnnotations('data/annotations/ccm_test_pub_annotation.json')
 
-        args.res_path = args.datapath + '/vision_estimations/container' + '/{:d}'.format(objid)
+    for i in range(228):
+        scenario = annotations_dict[i]['scenario']
         
-        listimages = pd.read_csv('data/annotations/annotation_public_test.csv', sep=',')
-        boolArray = listimages['Container ID'].values == objid
+        # Skip scenario 3 configurations
+        if scenario == 2:
+            continue
 
-        list_files = []
-        for j in listimages['Sequence'].values[boolArray]:
-            list_files.append('{:04d}'.format(j)) 
+        arg.res_path = args.datapath + '/vision_estimations/test_pub/'
 
-        for f in list_files:
-            args.video_1 = args.datapath + '/videos/' + str(objid) + '/rgb/'+ f + '_c1.mp4'
-            args.video_2 = args.datapath + '/videos/' + str(objid) + '/rgb/'+ f + '_c2.mp4'
-            args.calib_1 = args.datapath + '/calibration/' + str(objid) + '/extra/'+ f + '_c1_calib.pickle'
-            args.calib_2 = args.datapath + '/calibration/' + str(objid) + '/extra/'+ f + '_c2_calib.pickle'
-            
-            track = Tracker(args)
-            track.run()
+        args.video_1 = args.datapath + '/test_pub/view1/rgb/{:06d}.mp4'.format(i)
+        args.video_2 = args.datapath + '/test_pub/view2/rgb/{:06d}.mp4'.format(i)
+        args.calib_1 = args.datapath + '/test_pub/view1/calib/{:06d}.pickle'.format(i)
+        args.calib_2 = args.datapath + '/test_pub/view2/calib/{:06d}.pickle'.format(i)
+
+        track = Tracker(args)
+        track.run()
+
+
+#### PRIVATE TESTING SET ###
+def PublicTestingDataParser(args):
+    annotations_dict = LoadAnnotations('data/annotations/ccm_test_priv_annotation.json')
+
+    for i in range(228):
+        scenario = annotations_dict[i]['scenario']
+        
+        # Skip scenario 3 configurations
+        if scenario == 2:
+            continue
+
+        arg.res_path = args.datapath + '/vision_estimations/test_priv/'
+
+        args.video_1 = args.datapath + '/test_priv/view1/rgb/{:06d}.mp4'.format(i)
+        args.video_2 = args.datapath + '/test_priv/view2/rgb/{:06d}.mp4'.format(i)
+        args.calib_1 = args.datapath + '/test_priv/view1/calib/{:06d}.pickle'.format(i)
+        args.calib_2 = args.datapath + '/test_priv/view2/calib/{:06d}.pickle'.format(i)
+
+        track = Tracker(args)
+        track.run()
+
 
 if __name__ == '__main__':
     print('Initialising:')
@@ -135,7 +146,7 @@ if __name__ == '__main__':
     parser.add_argument('--calib_2', type=str)
     parser.add_argument('--res_path', type=str)
     parser.add_argument('--datapath', type=str, default='data/')
-    parser.add_argument('--dataset', default='train', type=str, help='Dataset to process: train, test or all')
+    parser.add_argument('--dataset', default='train', type=str, help='Dataset to process: train, test_pub, test_priv or all')
     # FillingNet
     parser.add_argument('--network_input_dimensions', default=128, type=int, help='network input dimensions')
     parser.add_argument('--pretrained', default=False, action='store_true', help='Use pretrained weights')
@@ -162,8 +173,9 @@ if __name__ == '__main__':
     else:
         if args.dataset == 'train':
             TrainingDataParser(args)
-        elif args.dataset == 'test':
+        elif args.dataset == 'test_pub':
             PublicTestingDataParser(args)
+        elif args.dataset == 'test_priv':
+            PrivateTestingDataParser(args)
         else:
             TrainingDataParser(args)
-            PublicTestingDataParser(args)
