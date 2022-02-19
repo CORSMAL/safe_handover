@@ -52,6 +52,7 @@ rm data/supplemetary_data -r
 Download the annotation file for the training dataset
 ```
 wget http://corsmal.eecs.qmul.ac.uk/data/CCM/ccm_train_annotation.json -P data/annotations/
+wget http://corsmal.eecs.qmul.ac.uk/data/ICME20/Training/Annotation_Training.csv -P data/annotations/
 ```
 We provide a demo video from the CORSMAL Container Manipulation (CCM) dataset for testing within the repository. However, if you would like to run experiments on other videos, you can run the following scripts to download the full dataset. (Note: We do not provide [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose) as part of the vision pipeline within this repository. Instead, we only provide the estimated hand keypoints results for the public training and testing recordings in scenario 1 and 2. If you would like to experiment with other videos, please setup OpenPose or other hand keypoints estimation method along side this repository.)
 
