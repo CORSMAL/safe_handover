@@ -226,9 +226,9 @@ def loadGroundTruth(real_data_training, real_data_testing, public_test_labels, c
     return True, file_labels, real_data
 
 
-def loadContainerTrajectory(container_id, recording_id):
+def loadContainerTrajectory(new_CCM_fname, dataset):
     measured_traj = []
-    trajectory_path = './data/vision_estimations/container/' + str(container_id) + '/volume_estimation/' + str(recording_id) + '_properties.txt'
+    trajectory_path = './data/CCM/vision_estimations/' + dataset + '/volume_estimation/' + new_CCM_fname + '_properties.txt'
     file = open(trajectory_path)
     next(file)
     for line in file:
@@ -276,7 +276,7 @@ def loadHandTrajectory(container_id, recording_id, max_frame, LR):
     return np.asarray(keypoints_trajectory)
 
 
-def loadPrediction(container_id, recording_id, CORSMAL_challenge):
+def loadPrediction(container_id, recording_id, new_CCM_fname, dataset, CORSMAL_challenge):
     success = True
     pred_data = {}
 
@@ -289,9 +289,9 @@ def loadPrediction(container_id, recording_id, CORSMAL_challenge):
     pred_filling_type_list = []
     pred_filling_level_list = []
     try:
-        container_estimations_path = './data/vision_estimations/container/' + str(container_id) + '/volume_estimation/'
-        properties_file = open(os.path.join(container_estimations_path, str(recording_id)+'_properties.txt'))
-        width_file = open(os.path.join(container_estimations_path, str(recording_id)+'_width.txt'))
+        container_estimations_path = './data/CCM/vision_estimations/' + dataset + '/volume_estimation/'
+        properties_file = open(os.path.join(container_estimations_path, new_CCM_fname+'_properties.txt'))
+        width_file = open(os.path.join(container_estimations_path, new_CCM_fname+'_width.txt'))
         if CORSMAL_challenge:
             corsmal_sub_file = open('./data/CORSMAL_challenge_submissions/'+method+'.csv')
     except FileNotFoundError:
@@ -507,6 +507,11 @@ if __name__ == "__main__":
 
         for cidx, container_id in enumerate(container_list):
             for recording_id in recording_list[cidx]:
+                if container_id in [1,2,3,4,5,6]:
+                    dataset = 'train'
+                elif container_id in [10,11]:
+                    dataset = 'test_pub'
+                new_CCM_fname = '{:06d}'.format(CCM_mapping_dict[container_id][recording_id])
                 # Making sure OpenPose data exist for this recording...
                 try:
                     hp_file = open('data/vision_estimations/openpose/' + str(container_id) + '/' + str(recording_id) + '/{0:012d}'.format(0) + '_keypoints.json', 'r')
@@ -534,12 +539,12 @@ if __name__ == "__main__":
                     continue
 
                 # Load container and hand trajectories
-                container_trajectory = loadContainerTrajectory(container_id, recording_id)
+                container_trajectory = loadContainerTrajectory(new_CCM_fname, dataset)
                 lefthand_trajectory = loadHandTrajectory(container_id, recording_id, len(container_trajectory), 'L')
                 righthand_trajectory = loadHandTrajectory(container_id, recording_id, len(container_trajectory), 'R')
                 
                 # Load predictions
-                load_file_succecss, pred_data = loadPrediction(container_id, recording_id, args.CORSMAL_challenge)
+                load_file_succecss, pred_data = loadPrediction(container_id, recording_id, new_CCM_fname, dataset, args.CORSMAL_challenge)
                 if not(load_file_succecss):
                     results_file_csvwriter.writerow([container_id, recording_id, file_labels['scenario'], file_labels['filling_type'], file_labels['filling_level'], file_labels['background'], file_labels['lighting'],
                                                     '1', '0', '0', '0.0', '0.0', '0', '0', '0', '0.0', '0.0', '0.0', '0.0', '0.0', '0.0',
@@ -568,13 +573,12 @@ if __name__ == "__main__":
                 env._reset()
                 
                 # Record video directly
-                new_CCM_fname = CCM_mapping_dict[container_id][recording_id]
                 if args.record_sim:
                     print('Start recording')
                     log_uid = p.startStateLogging(loggingType=p.STATE_LOGGING_VIDEO_MP4, fileName='videos/' + str(containerID) + '/' + filename + '.mp4')
                 # Display recording side by side
                 if args.show_recording:
-                    cap = cv2.VideoCapture('data/CCM/train/view1/{:06d}.mp4'.format(new_CCM_fname))
+                    cap = cv2.VideoCapture('data/CCM/{}/view1/rgb/{}.mp4'.format(dataset, new_CCM_fname))
                 elif args.show_demo_recording:
                     cap = cv2.VideoCapture('data/videos/demo/s0_fi0_fu0_b0_l0_c1.mp4')
 
