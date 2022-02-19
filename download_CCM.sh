@@ -29,26 +29,24 @@
 
 
 # Download zip files of the RGB recordings
-wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view1_rgb.z01 -P data/CCM/train/
-wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view1_rgb.zip -P data/CCM/train/
-wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view2_rgb.z01 -P data/CCM/train/
-wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view2_rgb.zip -P data/CCM/train/
+wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view1_rgb.z01 -P data/CCM/
+wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view1_rgb.zip -P data/CCM/
+wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view2_rgb.z01 -P data/CCM/
+wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view2_rgb.zip -P data/CCM/
 
 # Download zip files of the calibration parameters
-wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view1_calib.zip -P data/CCM/train/
-wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view2_calib.zip -P data/CCM/train/
+wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view1_calib.zip -P data/CCM/
+wget -v http://corsmal.eecs.qmul.ac.uk/data/CCM/train/ccm_train_view2_calib.zip -P data/CCM/
 
 # Join multi-part zip files
-cat data/CCM/train/ccm_train_view1_rgb.* >data/CCM/train/ccm_train_view1_rgb.zip
-zip -FF data/CCM/train/ccm_train_view1_rgb.zip --out data/CCM/train/ccm_train_view1_rgb_full.zip
-cat data/CCM/train/ccm_train_view2_rgb.* >data/CCM/train/ccm_train_view2_rgb.zip
-zip -FF data/CCM/train/ccm_train_view2_rgb.zip --out data/CCM/train/ccm_train_view2_rgb_full.zip
+zip -FF data/CCM/ccm_train_view1_rgb.zip --out data/CCM/ccm_train_view1_rgb_full.zip
+zip -FF data/CCM/ccm_train_view2_rgb.zip --out data/CCM/ccm_train_view2_rgb_full.zip
 
 # Unzip then remove the downloaded zip files
-unzip data/CCM/train/ccm_train_view1_rgb_full.zip -d data/CCM/train/
-unzip data/CCM/train/ccm_train_view2_rgb_full.zip -d data/CCM/train/
-unzip data/CCM/train/ccm_train_view1_calib.zip -d data/CCM/train/
-unzip data/CCM/train/ccm_train_view2_calib.zip -d data/CCM/train/
+unzip data/CCM/ccm_train_view1_rgb_full.zip -d data/CCM/
+unzip data/CCM/ccm_train_view2_rgb_full.zip -d data/CCM/
+unzip data/CCM/ccm_train_view1_calib.zip -d data/CCM/
+unzip data/CCM/ccm_train_view2_calib.zip -d data/CCM/
 
-rm data/CCM/train/*.z01
-rm data/CCM/train/*.zip
+rm data/CCM/ccm_train_view*
+rm data/CCM/ccm_train_view*

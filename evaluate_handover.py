@@ -410,6 +410,21 @@ def loadStartFrame(containerID, recordingID):
                 return int(row[2]), str(row[3])
 
 
+def loadCCMMapping():
+    CCM_mapping_dict = {}
+    for i in range(1,10):
+        CCM_mapping_dict[i] = {}
+    with open('data/CCM/ccm_annotations_train_set_mapping.txt', 'r') as f:
+        lines = f.readlines()
+        for l in lines:
+            container_id = int(l[0])
+            old_fname = str(l[2:18])
+            new_fname = int(l[21:])
+            CCM_mapping_dict[container_id][old_fname] = new_fname
+
+    return CCM_mapping_dict
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Simulated handover experiments')
 
@@ -470,6 +485,7 @@ if __name__ == "__main__":
     if dataset in ['test', 'all']:
         real_data_testing = loadGroundTruthTesting()
         public_test_labels = getPublicTestLabels()
+    CCM_mapping_dict = loadCCMMapping()
 
     for run in range(args.run_repeat):
         # Log the parameters used for this run
@@ -552,12 +568,13 @@ if __name__ == "__main__":
                 env._reset()
                 
                 # Record video directly
+                new_CCM_fname = CCM_mapping_dict[container_id][recording_id]
                 if args.record_sim:
                     print('Start recording')
                     log_uid = p.startStateLogging(loggingType=p.STATE_LOGGING_VIDEO_MP4, fileName='videos/' + str(containerID) + '/' + filename + '.mp4')
                 # Display recording side by side
                 if args.show_recording:
-                    cap = cv2.VideoCapture('data/videos/' + str(container_id) + '/rgb/' + recording_id + '_c1.mp4')
+                    cap = cv2.VideoCapture('data/CCM/train/view1/{:06d}.mp4'.format(new_CCM_fname))
                 elif args.show_demo_recording:
                     cap = cv2.VideoCapture('data/videos/demo/s0_fi0_fu0_b0_l0_c1.mp4')
 

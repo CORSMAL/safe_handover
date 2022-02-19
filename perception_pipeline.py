@@ -64,7 +64,7 @@ def TrainingDataParser(args):
         if scenario == 2:
             continue
 
-        arg.res_path = args.datapath + '/vision_estimations/train/'
+        args.res_path = args.datapath + '/vision_estimations/train/'
 
         args.video_1 = args.datapath + '/train/view1/rgb/{:06d}.mp4'.format(i)
         args.video_2 = args.datapath + '/train/view2/rgb/{:06d}.mp4'.format(i)
@@ -86,7 +86,7 @@ def PublicTestingDataParser(args):
         if scenario == 2:
             continue
 
-        arg.res_path = args.datapath + '/vision_estimations/test_pub/'
+        args.res_path = args.datapath + '/vision_estimations/test_pub/'
 
         args.video_1 = args.datapath + '/test_pub/view1/rgb/{:06d}.mp4'.format(i)
         args.video_2 = args.datapath + '/test_pub/view2/rgb/{:06d}.mp4'.format(i)
@@ -108,7 +108,7 @@ def PublicTestingDataParser(args):
         if scenario == 2:
             continue
 
-        arg.res_path = args.datapath + '/vision_estimations/test_priv/'
+        args.res_path = args.datapath + '/vision_estimations/test_priv/'
 
         args.video_1 = args.datapath + '/test_priv/view1/rgb/{:06d}.mp4'.format(i)
         args.video_2 = args.datapath + '/test_priv/view2/rgb/{:06d}.mp4'.format(i)
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     parser.add_argument('--calib_1', type=str)
     parser.add_argument('--calib_2', type=str)
     parser.add_argument('--res_path', type=str)
-    parser.add_argument('--datapath', type=str, default='data/')
+    parser.add_argument('--datapath', type=str, default='data/CCM/')
     parser.add_argument('--dataset', default='train', type=str, help='Dataset to process: train, test_pub, test_priv or all')
     # FillingNet
     parser.add_argument('--network_input_dimensions', default=128, type=int, help='network input dimensions')
