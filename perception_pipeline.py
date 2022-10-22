@@ -137,6 +137,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_LoDE', type=int, choices=[0,1], default=0)
     parser.add_argument('--LoDE_hstep', type=float, default=0.001)
     parser.add_argument('--LoDE_rstep', type=float, default=18.0)
+    parser.add_argument('--visualise_LoDE', type=bool, default=False)
     parser.add_argument('--record', type=int, choices=[0,1], default=0)
     parser.add_argument('--max_num_frames', type=int, default=-1)
     # Path to videos
