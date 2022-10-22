@@ -219,6 +219,7 @@ class container:
 
         self.zt1 = None
         self.zt = None
+        self.visualise_LoDE = args.visualise_LoDE
         
 
 
@@ -301,7 +302,7 @@ class container:
 
         self.anglesrad = anglesrad
     
-    def ShapeFitting(self, _c1, _c2, _objmask1, _objmask2, h_step, r_step):
+    def ShapeFitting(self, _c1, _c2, _objmask1, _objmask2, h_step, r_step, rgb1, rgb2):
 
         c1 = copy.deepcopy(_c1)
         c2 = copy.deepcopy(_c2)
@@ -382,7 +383,19 @@ class container:
 
                 if (np.count_nonzero(areIn_c1) == areIn_c1.shape[0]) and (np.count_nonzero(areIn_c2) == areIn_c2.shape[0]):
                     converged_circ = True
-                    break
+                    if self.visualise_LoDE:
+                        for p, isIn in zip(p2d_c1, areIn_c1):
+                            if isIn:
+                                cv2.circle(rgb1, (int(p[0]), int(p[1])), 2, (255, 0, 0), -1)
+                            else:
+                                cv2.circle(rgb1, (int(p[0]), int(p[1])), 2, (0, 0, 255), -1)
+
+                        for p, isIn in zip(p2d_c2, areIn_c2):
+                            if isIn:
+                                cv2.circle(rgb2, (int(p[0]), int(p[1])), 2, (255, 0, 0), -1)
+                            else:
+                                cv2.circle(rgb2, (int(p[0]), int(p[1])), 2, (0, 0, 255), -1)
+                        break
                 
                 if rad==minDiameter/2:
                     break
@@ -399,6 +412,12 @@ class container:
 
         self.estRadius = convRadius[round(0.1*len(convRadius)):round(0.9*len(convRadius))]
         self.estHeights = convHeights[round(0.1*len(convHeights)):round(0.9*len(convHeights))]
+
+        if self.visualise_LoDE:
+            dim = (rgb1.shape[1] // 2, rgb2.shape[0] // 2)
+            cv2.imshow("LoDE [blue] and object mask [green]", np.hstack([cv2.resize(rgb1, dim, interpolation=cv2.INTER_AREA),
+                                                              cv2.resize(rgb2, dim, interpolation=cv2.INTER_AREA)]))
+            cv2.waitKey(10)
 
 
     # Localisation and dimension estimation via shape reconstruction in 3D
@@ -462,7 +481,7 @@ class container:
             objmask2 = np.uint8(255.* (instances2['masks'][j] >= 0.5))
 
         # print('ShapeFitting')
-        self.ShapeFitting(c1, c2, objmask1, objmask2, h_step, r_step)
+        self.ShapeFitting(c1, c2, objmask1, objmask2, h_step, r_step, rgb1, rgb2)
 
         # print('ComputeDimensions')
         # Compute container dimensions
