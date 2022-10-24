@@ -4,11 +4,12 @@
 #        Author: Ricardo Sanchez Matilla
 #        Author: Yik Lung Pang
 #        Author: Alessio Xompero
+#        Author: Tommaso Apicella
 #         Email: corsmal-benchmark@qmul.ac.uk
 #
 #
 #  Created Date: 2020/02/13
-# Modified Date: 2020/10/05
+# Modified Date: 2022/10/24
 #
 # Centre for Intelligent Sensing, Queen Mary University of London, UK
 # 
@@ -137,6 +138,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_LoDE', type=int, choices=[0,1], default=0)
     parser.add_argument('--LoDE_hstep', type=float, default=0.001)
     parser.add_argument('--LoDE_rstep', type=float, default=18.0)
+    parser.add_argument('--visualise_LoDE', type=bool, default=False)
     parser.add_argument('--record', type=int, choices=[0,1], default=0)
     parser.add_argument('--max_num_frames', type=int, default=-1)
     # Path to videos
