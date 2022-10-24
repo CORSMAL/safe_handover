@@ -4,11 +4,12 @@
 #        Author: Ricardo Sanchez Matilla
 #        Author: Yik Lung Pang
 #        Author: Alessio Xompero
+#        Author: Tommaso Apicella
 #         Email: corsmal-benchmark@qmul.ac.uk
 #
 #
 #  Created Date: 2020/02/13
-# Modified Date: 2020/10/05
+# Modified Date: 2022/10/24
 #
 # Centre for Intelligent Sensing, Queen Mary University of London, UK
 # 
