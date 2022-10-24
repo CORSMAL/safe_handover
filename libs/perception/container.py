@@ -4,7 +4,7 @@
 # Authors: 
 #   - Yik Lung Pang: y.l.pang@qmul.ac.uk
 #   - Alessio Xompero: a.xompero@qmul.ac.uk
-#
+#   - Tommaso Apicella: t.apicella@qmul.ac.uk
 # MIT License
 
 # Copyright (c) 2021 CORSMAL
