@@ -412,6 +412,7 @@ def loadStartFrame(containerID, recordingID):
 
 def loadCCMMapping():
     CCM_mapping_dict = {}
+    CCM_mapping_dict_inv = {}
     for i in range(1,10):
         CCM_mapping_dict[i] = {}
     with open('data/CCM/ccm_annotations_train_set_mapping.txt', 'r') as f:
@@ -421,8 +422,9 @@ def loadCCMMapping():
             old_fname = str(l[2:18])
             new_fname = int(l[21:])
             CCM_mapping_dict[container_id][old_fname] = new_fname
+            CCM_mapping_dict_inv[new_fname] = [container_id, old_fname]
 
-    return CCM_mapping_dict
+    return CCM_mapping_dict, CCM_mapping_dict_inv
 
 
 if __name__ == "__main__":
@@ -432,7 +434,6 @@ if __name__ == "__main__":
     parser.add_argument('--debug', dest='debug', action='store_true', help='Debug mode')
     parser.add_argument('--render', dest='render', action='store_true', help='Render GUI of the simulation')
     parser.add_argument('--show_recording', dest='show_recording', action='store_true', help='Replay recording from real environment')
-    parser.add_argument('--show_demo_recording', dest='show_demo_recording', action='store_true', help='Replay demo recording')
     parser.add_argument('--record_sim', dest='record_sim', action='store_true', help='Record video of the simulated experiment')
     
     parser.add_argument('--run_desc', default='baseline_A', type=str, help='Name of the run')
@@ -440,8 +441,7 @@ if __name__ == "__main__":
     parser.add_argument('--results_path', default='results/', type=str, help='Path to results file')
     parser.add_argument('--dataset', default='train', type=str, help='Dataset to evaluate: train, test or all')
     parser.add_argument('--run_repeat', default=1, type=int, help='How many times to evaluate for each recording')
-    parser.add_argument('--container_id', type=int, help='Run on single container')
-    parser.add_argument('--recording_id', type=str, help='Run on single recording')
+    parser.add_argument('--recording_id', type=int, help='Run on single recording')
     
     parser.add_argument('--gripper_open_width', default=0.085, type=float, help='Width of gripper when opened')
 
@@ -459,13 +459,16 @@ if __name__ == "__main__":
     p.resetDebugVisualizerCamera(1.20, 151.6, -19.4,[0.10, -0.04, 0.72])
 
     dataset = args.dataset
-    if args.container_id and args.recording_id:
-        container_list = [args.container_id]
-        recording_list = [[args.recording_id]]
-        if args.container_id in [1,2,3,4,5,6]:
+    CCM_mapping_dict, CCM_mapping_dict_inv = loadCCMMapping()
+    if args.recording_id:
+        container_id, recording_id = CCM_mapping_dict_inv[int(args.recording_id)]
+        container_list = [container_id]
+        recording_list = [[recording_id]]
+        if container_id in [1,2,3,4,5,6]:
             dataset = 'train'
-        elif args.container_id in [10, 11]:
+        elif container_id in [10, 11]:
             dataset = 'test'
+
     else:
         container_list = [1,2,3,4,5,6,10,11]
         recording_list = []
@@ -485,7 +488,6 @@ if __name__ == "__main__":
     if dataset in ['test', 'all']:
         real_data_testing = loadGroundTruthTesting()
         public_test_labels = getPublicTestLabels()
-    CCM_mapping_dict = loadCCMMapping()
 
     for run in range(args.run_repeat):
         # Log the parameters used for this run
@@ -579,14 +581,12 @@ if __name__ == "__main__":
                 # Display recording side by side
                 if args.show_recording:
                     cap = cv2.VideoCapture('data/CCM/{}/view1/rgb/{}.mp4'.format(dataset, new_CCM_fname))
-                elif args.show_demo_recording:
-                    cap = cv2.VideoCapture('data/videos/demo/s0_fi0_fu0_b0_l0_c1.mp4')
 
                 direction = [0.0, 0.0, 0.0]
                 safe_grasp_debug_lines = [[], []]
                 for replayFrameID in range(len(pred_data['container_trajectory'])):
                     # Display current recorded frame from left camera view
-                    if args.show_recording or args.show_demo_recording:
+                    if args.show_recording:
                         ret, frame = cap.read()
                         frame = cv2.resize(frame, (640, 360))
                         cv2.imshow('frame', frame)
@@ -650,7 +650,7 @@ if __name__ == "__main__":
                         break
 
                 # Stop replay of recording
-                if args.show_recording or args.show_demo_recording:
+                if args.show_recording:
                     cap.release()
                     cv2.destroyAllWindows()
 

@@ -71,11 +71,11 @@ This is a demo for estimating properties and simulating the handover for a singl
 
 First, run the vision based perception pipeline to estimate the properties of handover (trajectory and shape of the container, hand keypoints, filling type and level)
 ```
-python perception_pipeline.py --load_recorded_video 1 --save_seg_mask 0 --save_volume_estimation 1 --export_pointcloud 1 --pointcloud_frame 0 --use_LoDE 1 --LoDE_hstep 0.002 --LoDE_rstep 5.0 --video_1 data/videos/demo/s0_fi0_fu0_b0_l0_c1.mp4 --video_2 data/videos/demo/s0_fi0_fu0_b0_l0_c2.mp4 --calib_1 data/calibration/demo/s0_fi0_fu0_b0_l0_c1_calib.pickle --calib_2 data/calibration/demo/s0_fi0_fu0_b0_l0_c2_calib.pickle --res_path data/vision_estimations/container/1/
+python perception_pipeline.py --load_recorded_video 1 --save_seg_mask 0 --save_volume_estimation 1 --export_pointcloud 1 --pointcloud_frame 0 --use_LoDE 1 --LoDE_hstep 0.002 --LoDE_rstep 5.0 --video_1 data/CCM/train/view1/rgb/000618.mp4 --video_2 data/CCM/train/view2/rgb/000618.mp4 --calib_1 data/CCM/train/view1/calib/000618.pickle --calib_2 data/CCM/train/view2/calib/000618.pickle --res_path data/vision_estimations/
 ```
 Then, run the simulation to evaluate the handover. A GUI of the simulation will show up and the recording of the handover from camera view 1 will be played on the side.
 ```
-python evaluate_handover.py --render --show_demo_recording --run_desc demo --container_id 1 --recording_id s0_fi0_fu0_b0_l0
+python evaluate_handover.py --render --show_recording --run_desc demo --recording_id 618
 ```
 Numerical results are saved in the `results/` folder.
 

@@ -207,6 +207,6 @@ https://repo.anaconda.com/pkgs/main/linux-64/pytorch-1.1.0-cuda100py36he554f03_0
 https://repo.anaconda.com/pkgs/main/linux-64/torchvision-0.3.0-cuda100py36h72fc40a_0.conda
 https://conda.anaconda.org/hcc/linux-64/pybullet-2.4.8-py36h6bb024c_1.tar.bz2
 https://conda.anaconda.org/conda-forge/linux-64/scipy-1.4.1-py36h2d22cac_3.tar.bz2
-https://conda.anaconda.org/hcc/linux-64/gym-0.12.1-py36_1.tar.bz2
+https://conda.anaconda.org/conda-forge/linux-64/gym-0.19.0-py36he75451f_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/noarch/attrs-19.3.0-py_0.conda
 https://conda.anaconda.org/conda-forge/noarch/attrdict-2.0.1-py_0.tar.bz2
